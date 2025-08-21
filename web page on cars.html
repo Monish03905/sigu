@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cool Car Facts</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 20px;
+            background: url('https://source.unsplash.com/1600x900/?cars') no-repeat center center/cover;
+            color: gray;
+        }
+        #carInfo {
+            margin-top: 20px;
+            font-size: 20px;
+            font-weight: bold;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.6);
+        }
+        button {
+            padding: 12px 24px;
+            font-size: 18px;
+            cursor: pointer;
+            background-color: #ffcc00;
+            color: black;
+            border: none;
+            border-radius: 8px;
+            box-shadow: 2px 2px 10px rgba(0,0,0,0.3);
+            transition: transform 0.2s;
+        }
+        button:hover {
+            transform: scale(1.1);
+        }
+        .car-image {
+            width: 300px;
+            height: auto;
+            margin-top: 20px;
+            animation: fadeIn 2s;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+    <h1>Cool Car Facts</h1>
+    <p>Click the button below to learn an interesting fact about cars!</p>
+    <button onclick="showCarFact()">Show Car Fact</button>
+    <p id="carInfo"></p>
+    <img id="carImage" class="car-image" src="https://source.unsplash.com/300x200/?car" alt="Random Car Image">
+
+    <script>
+        function showCarFact() {
+            const facts = [
+                "The first car was invented in 1885 by Karl Benz.",
+                "The world's fastest car is the Bugatti Chiron Super Sport 300+.",
+                "Electric cars were invented before gasoline cars.",
+                "The first traffic light was installed in 1914 in Cleveland, Ohio.",
+                "The most popular car color in the world is white."
+            ];
+            
+            const randomFact = facts[Math.floor(Math.random() * facts.length)];
+            document.getElementById("carInfo").textContent = randomFact;
+            document.getElementById("carImage").src = "https://source.unsplash.com/300x200/?car,racing";
+        }
+    </script>
+</body>
+</html>
+

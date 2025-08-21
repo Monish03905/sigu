@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Login</title>
+    <!-- Tailwind CSS CDN for sleek styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts for 'Inter' typeface -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Custom styles for a unique look beyond Tailwind defaults */
+        body {
+            font-family: 'Inter', sans-serif; /* Apply Inter font */
+            background: linear-gradient(to right, #6a11cb 0%, #2575fc 100%); /* Vibrant blue-purple gradient background */
+            display: flex; /* Use flexbox for centering content */
+            justify-content: center; /* Center horizontally */
+            align-items: center; /* Center vertically */
+            min-height: 100vh; /* Full viewport height */
+            margin: 0; /* Remove default body margin */
+            padding: 20px; /* Add some padding on smaller screens */
+            box-sizing: border-box; /* Include padding in element's total width and height */
+        }
+        .login-container {
+            background-color: white; /* White background for the login card */
+            padding: 40px; /* Ample padding inside the card */
+            border-radius: 1.5rem; /* Heavily rounded corners for a soft look */
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+            width: 100%; /* Full width on small screens */
+            max-width: 420px; /* Max width for larger screens */
+            text-align: center; /* Center text inside the card */
+            animation: fadeInScale 0.7s ease-out forwards; /* Animation on load */
+        }
+        /* Keyframe animation for a subtle entrance effect */
+        @keyframes fadeInScale {
+            from { opacity: 0; transform: scale(0.95) translateY(20px); }
+            to { opacity: 1; transform: scale(1) translateY(0); }
+        }
+        /* Styling for input fields */
+        input[type="email"],
+        input[type="password"],
+        textarea {
+            width: 100%; /* Full width */
+            padding: 14px; /* Generous padding */
+            border: 1px solid #e2e8f0; /* Light gray border */
+            border-radius: 0.75rem; /* Rounded input fields */
+            font-size: 1rem; /* Standard font size */
+            outline: none; /* Remove default outline */
+            transition: border-color 0.3s ease, box-shadow 0.3s ease; /* Smooth transition for focus */
+            background-color: #f9fafb; /* Very light gray background for inputs */
+        }
+        /* Focus styles for input fields and textarea */
+        input[type="email"]:focus,
+        input[type="password"]:focus,
+        textarea:focus {
+            border-color: #6d28d9; /* Deep purple border on focus */
+            box-shadow: 0 0 0 3px rgba(109, 40, 217, 0.2); /* Soft purple shadow on focus */
+            background-color: white; /* White background on focus */
+        }
+        /* Styling for the submit button */
+        button {
+            width: 100%; /* Full width */
+            padding: 14px; /* Generous padding */
+            background-color: #7c3aed; /* Vibrant purple button */
+            color: white; /* White text */
+            font-weight: 700; /* Bold text */
+            border: none; /* No border */
+            border-radius: 0.75rem; /* Rounded button */
+            cursor: pointer; /* Pointer cursor on hover */
+            transition: background-color 0.3s ease, transform 0.2s ease; /* Smooth hover and click effects */
+            font-size: 1.125rem; /* Slightly larger font for button */
+            box-shadow: 0 10px 15px -3px rgba(124, 58, 237, 0.3), 0 4px 6px -2px rgba(124, 58, 237, 0.2); /* Purple shadow */
+        }
+        /* Hover and active states for button */
+        button:hover {
+            background-color: #6d28d9; /* Darker purple on hover */
+            transform: translateY(-2px); /* Slight lift effect */
+        }
+        button:active {
+            transform: translateY(0); /* Return to original position on click */
+        }
+        /* Styling for error messages */
+        .error-message {
+            color: #ef4444; /* Red color for error messages */
+            font-size: 0.875rem; /* Smaller font size */
+            margin-top: -8px; /* Adjust spacing */
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        /* Styling for the custom message box */
+        .message-box {
+            position: fixed; /* Fixed position relative to viewport */
+            top: 20px; /* 20px from the top */
+            left: 50%; /* Center horizontally */
+            transform: translateX(-50%); /* Adjust for true centering */
+            background-color: #4CAF50; /* Green for success messages */
+            color: white; /* White text */
+            padding: 15px 25px; /* Padding inside the box */
+            border-radius: 0.75rem; /* Rounded corners */
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2); /* Shadow for depth */
+            z-index: 1000; /* Ensure it's on top of other content */
+            display: none; /* Hidden by default */
+            opacity: 0; /* Start invisible for transition */
+            transition: opacity 0.3s ease, transform 0.3s ease; /* Smooth fade-in/out and slide */
+        }
+        .message-box.show {
+            display: block; /* Show the box */
+            opacity: 1; /* Fully visible */
+            transform: translateX(-50%) translateY(0); /* Slide into view */
+        }
+
+        /* Loading indicator styling */
+        .loader {
+            border: 4px solid #f3f3f3; /* Light grey */
+            border-top: 4px solid #7c3aed; /* Purple */
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            animation: spin 1s linear infinite;
+            display: none; /* Hidden by default */
+            margin: 0 auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Responsive adjustments for smaller screens */
+        @media (max-width: 600px) {
+            .login-container {
+                padding: 30px; /* Reduce padding on small screens */
+                margin: 10px; /* Add margin to avoid sticking to edges */
+            }
+            input[type="email"],
+            input[type="password"],
+            textarea,
+            button {
+                padding: 12px; /* Slightly smaller padding for inputs/button */
+                font-size: 0.95rem; /* Slightly smaller font size */
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <h1 class="text-3xl font-bold text-gray-800 mb-6">Welcome Back!</h1>
+        <p class="text-gray-600 mb-8">Sign in to your account to continue your journey.</p>
+        <form id="loginForm" onsubmit="handleLogin(event)" class="space-y-6">
+            <div>
+                <input type="email" id="email" placeholder="Email Address" required>
+            </div>
+            <div>
+                <input type="password" id="password" placeholder="Password" required>
+            </div>
+            <p id="loginError" class="error-message"></p>
+            <button type="submit">Login Securely</button>
+        </form>
+        <p class="text-gray-600 mt-8 text-sm">
+            Don't have an account yet? <a href="#" onclick="showRegisterPage()" class="text-indigo-600 hover:underline font-medium">Register here</a>
+        </p>
+
+        <hr class="my-8 border-gray-200">
+
+        <!-- Gemini API Integration Section -->
+        <div class="gemini-section mt-8">
+            <h2 class="text-2xl font-bold text-gray-800 mb-4">✨ Login Assistant</h2>
+            <p class="text-gray-600 mb-4">Need a witty login slogan or a password tip? Let our AI help!</p>
+            <div class="space-y-4">
+                <textarea id="aiPrompt" rows="3" placeholder="e.g., 'Give me a fun login slogan', or 'Tips for a strong password'" class="w-full"></textarea>
+                <button onclick="generateLoginIdea()" id="generateBtn">Generate Idea ✨</button>
+                <div id="loader" class="loader mx-auto"></div>
+                <div id="aiOutput" class="mt-4 p-4 bg-gray-50 border border-gray-200 rounded-lg text-left text-gray-700 min-h-[50px] flex items-center justify-center text-sm italic">
+                    Your generated idea will appear here.
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Custom message box for user feedback -->
+    <div id="messageBox" class="message-box"></div>
+
+    <script>
+        const loginForm = document.getElementById('loginForm');
+        const loginError = document.getElementById('loginError');
+        const messageBox = document.getElementById('messageBox');
+        const aiPromptInput = document.getElementById('aiPrompt');
+        const aiOutputDiv = document.getElementById('aiOutput');
+        const generateBtn = document.getElementById('generateBtn');
+        const loader = document.getElementById('loader');
+
+        /**
+         * Displays a custom message box with a given message and type (success/error/info).
+         * @param {string} message - The message to display.
+         * @param {string} type - 'success', 'error', or 'info' to determine background color.
+         */
+        function showMessage(message, type = 'success') {
+            messageBox.textContent = message;
+            // Set background color based on message type
+            if (type === 'success') {
+                messageBox.style.backgroundColor = '#4CAF50'; // Green for success
+            } else if (type === 'error') {
+                messageBox.style.backgroundColor = '#f44336'; // Red for errors
+            } else {
+                messageBox.style.backgroundColor = '#2196F3'; // Blue for info
+            }
+            messageBox.classList.add('show'); // Add 'show' class to make it visible
+            // Hide the message box after 3 seconds
+            setTimeout(() => {
+                messageBox.classList.remove('show');
+            }, 3000);
+        }
+
+        /**
+         * Handles the login form submission.
+         * Prevents default submission, performs basic validation, and simulates login.
+         * @param {Event} event - The form submission event.
+         */
+        function handleLogin(event) {
+            event.preventDefault(); // Stop the browser from reloading the page
+            loginError.textContent = ''; // Clear any previous error messages
+
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+
+            // Basic client-side validation
+            if (!email || !password) {
+                loginError.textContent = 'Please enter both your email and password.';
+                return; // Stop the function if validation fails
+            }
+
+            // In a real application, you would send these credentials to a server
+            // for authentication (e.g., using fetch API).
+            // For this example, we'll just log the attempt and show a success message.
+            console.log('Login attempt:', { email, password });
+            showMessage('Login successful! Redirecting...', 'success');
+
+            // Simulate clearing the form after successful login
+            document.getElementById('email').value = '';
+            document.getElementById('password').value = '';
+
+            // In a real application, you would redirect the user to a dashboard:
+            // setTimeout(() => {
+            //     window.location.href = '/dashboard.html';
+            // }, 1500);
+        }
+
+        /**
+         * Simulates navigating to a registration page.
+         * In a real app, this would change the window location.
+         */
+        function showRegisterPage() {
+            console.log('User wants to register. Navigating to registration page...');
+            showMessage('Redirecting to Registration Page (simulated)...', 'info');
+            // Example of how you would redirect to a real registration page:
+            // window.location.href = 'register.html';
+        }
+
+        /**
+         * Calls the Gemini API to generate a login idea or password tip.
+         */
+        async function generateLoginIdea() {
+            const userPrompt = aiPromptInput.value.trim();
+            if (!userPrompt) {
+                showMessage('Please enter a prompt for the AI.', 'error');
+                return;
+            }
+
+            aiOutputDiv.textContent = 'Generating...'; // Set initial loading text
+            generateBtn.disabled = true; // Disable button during generation
+            loader.style.display = 'block'; // Show loading spinner
+
+            let chatHistory = [];
+            chatHistory.push({ role: "user", parts: [{ text: userPrompt }] });
+
+            const payload = { contents: chatHistory };
+            const apiKey = ""; // Leave as-is, Canvas will provide it
+            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${apiKey}`;
+
+            // Implement exponential backoff for API calls
+            const maxRetries = 3;
+            let retryCount = 0;
+            let success = false;
+            let result;
+
+            while (retryCount < maxRetries && !success) {
+                try {
+                    const response = await fetch(apiUrl, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+
+                    if (response.status === 429) { // Too Many Requests
+                        const delay = Math.pow(2, retryCount) * 1000; // Exponential delay
+                        console.warn(`Rate limit hit. Retrying in ${delay / 1000} seconds...`);
+                        await new Promise(res => setTimeout(res, delay));
+                        retryCount++;
+                        continue; // Try again
+                    }
+
+                    result = await response.json();
+                    success = true; // If we reach here, the request was successful
+                } catch (error) {
+                    console.error('Fetch error:', error);
+                    aiOutputDiv.textContent = 'Error: Could not connect to AI service.';
+                    break; // Exit loop on network or other critical errors
+                }
+            }
+
+            loader.style.display = 'none'; // Hide loading spinner
+            generateBtn.disabled = false; // Re-enable button
+
+            if (success && result.candidates && result.candidates.length > 0 &&
+                result.candidates[0].content && result.candidates[0].content.parts &&
+                result.candidates[0].content.parts.length > 0) {
+                const text = result.candidates[0].content.parts[0].text;
+                aiOutputDiv.textContent = text;
+            } else {
+                aiOutputDiv.textContent = 'Sorry, I could not generate an idea. Please try again.';
+                console.error('Gemini API response structure unexpected or empty:', result);
+                showMessage('Failed to generate idea. Please try again.', 'error');
+            }
+        }
+    </script>
+</body>
+</html>

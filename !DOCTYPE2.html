@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>User Registration</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: linear-gradient(270deg, #6d28d9, #db2777, #2563eb);
+      background-size: 600% 600%;
+      animation: bgShift 12s ease infinite;
+    }
+    @keyframes bgShift {
+      0% { background-position: 0% 50% }
+      50% { background-position: 100% 50% }
+      100% { background-position: 0% 50% }
+    }
+    .card {
+      backdrop-filter: blur(20px);
+      background: rgba(255,255,255,0.1);
+      border: 1px solid rgba(255,255,255,0.2);
+      border-radius: 1rem;
+      padding: 2rem;
+      width: 100%;
+      max-width: 380px;
+      color: white;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+      animation: fadeIn 0.8s ease-out;
+    }
+    @keyframes fadeIn {
+      from {opacity: 0; transform: translateY(20px);}
+      to {opacity: 1; transform: translateY(0);}
+    }
+    input, button {
+      width: 100%;
+      padding: 0.75rem;
+      border-radius: 0.5rem;
+      margin-top: 0.8rem;
+      border: none;
+      font-size: 1rem;
+    }
+    input {background: rgba(255,255,255,0.15); color: white; outline: none;}
+    input::placeholder {color: rgba(255,255,255,0.6);}
+    input:focus {background: rgba(255,255,255,0.25);}
+    button {
+      background: #9333ea;
+      font-weight: bold;
+      margin-top: 1.2rem;
+      cursor: pointer;
+      transition: 0.3s;
+      color: white;
+    }
+    button:hover {background: #7e22ce; transform: translateY(-2px);}
+    .error {color: #f87171; font-size: 0.9rem; margin-top: 0.5rem;}
+    .msg {
+      position: fixed; top: 20px; left: 50%; transform: translateX(-50%);
+      padding: 12px 20px; border-radius: 0.5rem;
+      display: none; color: white; font-weight: 600;
+    }
+    .msg.show {display: block;}
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1 class="text-2xl font-bold mb-2">Create Account</h1>
+    <p class="text-sm text-gray-200 mb-4">Join us & explore cool features 🚀</p>
+    <form onsubmit="register(event)">
+      <input type="text" id="username" placeholder="Username" required>
+      <input type="email" id="email" placeholder="Email" required>
+      <input type="password" id="password" placeholder="Password (min 6 chars)" required>
+      <input type="password" id="confirm" placeholder="Confirm Password" required>
+      <p id="err" class="error"></p>
+      <button type="submit">Register</button>
+    </form>
+    <p class="text-sm mt-4">Already a member? 
+      <a href="#" onclick="loginPage()" class="text-purple-300 hover:underline">Login</a>
+    </p>
+  </div>
+  <div id="msg" class="msg"></div>
+
+  <script>
+    const err=document.getElementById("err"),msg=document.getElementById("msg");
+    function showMsg(t,c){msg.textContent=t;msg.style.background=c;msg.classList.add("show");
+      setTimeout(()=>msg.classList.remove("show"),2500);}
+    function register(e){
+      e.preventDefault();err.textContent="";
+      let u=username.value.trim(),em=email.value.trim(),p=password.value,c=confirm.value;
+      if(p.length<6) return err.textContent="Password must be ≥ 6 chars";
+      if(p!==c) return err.textContent="Passwords do not match";
+      showMsg("🎉 Registered Successfully!","green");
+      username.value=email.value=password.value=confirm.value="";
+    }
+    function loginPage(){showMsg("Redirecting to Login...","blue");}
+  </script>
+</body>
+</html>
